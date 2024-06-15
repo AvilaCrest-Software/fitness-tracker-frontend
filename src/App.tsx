@@ -1,12 +1,12 @@
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
-import { lightTheme } from "./themes";
+import { darkTheme } from "./themes";
 import AppRoutes from './AppRoutes';
 
 function App() {
   return (
-    <ThemeProvider theme={lightTheme}>
+    <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <BrowserRouter>
         <AppRoutes />

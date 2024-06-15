@@ -11,6 +11,10 @@
   width: 100%;
 }
 
+.input-row {
+  padding-bottom: 12px;
+}
+
 .website-link {
   font-size: 14px;
   text-decoration: none;

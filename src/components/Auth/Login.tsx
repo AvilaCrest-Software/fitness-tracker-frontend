@@ -1,7 +1,7 @@
 
 import { useState, FormEvent, SyntheticEvent } from 'react';
 import * as Yup from 'yup';
-import { Button, Grid, TextField, Divider } from '@mui/material';
+import { Button, Grid, Typography, TextField, Divider } from '@mui/material';
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -60,8 +60,10 @@ function Login() {
   return (
     <form className="w-100" noValidate onSubmit={HandleLogin}>
       <Grid container item flexDirection={"column"}>
-        <span>EMAIL</span>
-        <Grid className="input-row" container item flexDirection={"row"} alignItems="center" justifyContent='center'>
+        <Typography variant="subtitle1">
+          Email
+        </Typography>
+        <Grid className="input-row mb-5" container item flexDirection={"row"} alignItems="center" justifyContent='center'>
           <TextField
             value={email}
             name="email"
@@ -75,7 +77,9 @@ function Login() {
             onChange={HandleEmailChange}
           />
         </Grid>
-        <span>PASSWORD</span>
+        <Typography variant="subtitle1">
+          Password
+        </Typography>
         <Grid className="input-row" container item flexDirection={"row"} alignItems="center" justifyContent='center'>
           <TextField
             value={password}
