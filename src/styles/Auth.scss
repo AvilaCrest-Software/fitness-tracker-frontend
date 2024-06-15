@@ -1,3 +1,5 @@
+@import "../variables.scss";
+
 #auth-container {
   background: url("../assets/auth_background.png");
   background-size: cover;
@@ -16,5 +18,5 @@
 .auth-extra-action {
   cursor: pointer;
   font-weight: 600;
-  color: #ffa500;
+  color: $primary-color;
 }

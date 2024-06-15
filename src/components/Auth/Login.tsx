@@ -1,5 +1,6 @@
 
 import { useState, FormEvent, SyntheticEvent } from 'react';
+import useGoTo from '../../customHooks/useGoTo';
 import * as Yup from 'yup';
 import { Button, Grid, Typography, TextField, Divider } from '@mui/material';
 
@@ -9,6 +10,7 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const goTo = useGoTo();
 
   const validationSchema = Yup.object({
     email: Yup.string().required('Email is required').matches(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,'Invalid email address'),
@@ -113,7 +115,7 @@ function Login() {
             Register
           </span>
           <Divider className="vertical-divider" orientation="vertical" flexItem />
-          <span className="auth-extra-action">
+          <span className="auth-extra-action" onClick={() => goTo("home")}>
             Home
           </span>
         </Grid>

@@ -1,7 +1,9 @@
 
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { RootState } from "./store/store";
+import Dashboard from "./containers/Dashboard";
+import Home from "./containers/Home";
 import Auth from "./containers/Auth";
 import Login from "./components/Auth/Login";
 
@@ -10,10 +12,15 @@ function AppRoutes() {
 
   return (
     <Routes>
+      <Route element={<Dashboard />}>
+        <Route index path="home" element={<Home />} />
+      </Route>
       {!user && 
-      <Route element={<Auth />}>
-        <Route path="login" element={<Login />}></Route>
-      </Route>}
+        <Route element={<Auth />}>
+          <Route path="login" element={<Login />}></Route>
+        </Route>
+      }
+      <Route path="*" element={<Navigate to="/home" />} />
     </Routes>
   )
 }
