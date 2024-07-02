@@ -5,6 +5,7 @@ import useGoTo from '../../customHooks/useGoTo';
 import * as Yup from 'yup';
 import { AppDispatch } from '../../store/store';
 import { login, setUser } from '../../store/auth/authSlice'
+import { encrypt, decrypt } from '../../helpers/encryption';
 import { Button, Grid, Typography, TextField, Divider, FormControlLabel, Checkbox } from '@mui/material';
 
 function Login() {
@@ -24,7 +25,7 @@ function Login() {
       const loginData = JSON.parse(lsRememberMe);
       setRememberMe(true);
       setEmail(loginData.email);
-      setPassword(loginData.password);
+      setPassword(decrypt(loginData.password));
     } 
   }, [])
 
@@ -87,14 +88,13 @@ function Login() {
     }))
       .unwrap()
       .then(res => {
-        const user = {
-          email,
-          password,
-        }
+        const encryptedPassword = encrypt(password);
 
-        // TODO: Encrypt password
         if (rememberMe) {
-          window.localStorage.setItem("ttp_remember_me", JSON.stringify(user));
+          window.localStorage.setItem("ttp_remember_me", JSON.stringify({
+            email,
+            password: encryptedPassword,
+          }));
         }
 
         dispatch(setUser(res));
