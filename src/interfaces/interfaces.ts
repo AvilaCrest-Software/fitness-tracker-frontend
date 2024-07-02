@@ -2,13 +2,14 @@ import { SerializedError } from "@reduxjs/toolkit";
 
 // Authentication-related
 export interface Token {
+  user_id: string;
+  sub: string;
   exp: number;
   iat: number;
-  sub: string;
 }
 export interface User {
-  _id: string;
-  email: string;
+  user_id: string;
+  sub: string;
 }
 
 export interface LoginData {

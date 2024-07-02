@@ -21,8 +21,10 @@ function Login() {
     const lsRememberMe = window.localStorage.getItem("ttp_remember_me");
 
     if (lsRememberMe) {
-      console.log("REMEMBER ME");
+      const loginData = JSON.parse(lsRememberMe);
       setRememberMe(true);
+      setEmail(loginData.email);
+      setPassword(loginData.password);
     } 
   }, [])
 
@@ -91,7 +93,10 @@ function Login() {
         }
 
         // TODO: Encrypt password
-        window.localStorage.setItem("ttp_remember_me", JSON.stringify(user));
+        if (rememberMe) {
+          window.localStorage.setItem("ttp_remember_me", JSON.stringify(user));
+        }
+
         dispatch(setUser(res));
         goTo("home");
       })
