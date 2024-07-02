@@ -1,16 +1,30 @@
 
-import { useState, FormEvent, SyntheticEvent } from 'react';
+import { useState, useEffect, FormEvent, SyntheticEvent } from 'react';
+import { useDispatch } from 'react-redux';
 import useGoTo from '../../customHooks/useGoTo';
 import * as Yup from 'yup';
-import { Button, Grid, Typography, TextField, Divider } from '@mui/material';
+import { AppDispatch } from '../../store/store';
+import { login, setUser } from '../../store/auth/authSlice'
+import { Button, Grid, Typography, TextField, Divider, FormControlLabel, Checkbox } from '@mui/material';
 
 function Login() {
+  const dispatch = useDispatch<AppDispatch>();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const goTo = useGoTo();
+
+  useEffect(() => {
+    const lsRememberMe = window.localStorage.getItem("ttp_remember_me");
+
+    if (lsRememberMe) {
+      console.log("REMEMBER ME");
+      setRememberMe(true);
+    } 
+  }, [])
 
   const validationSchema = Yup.object({
     email: Yup.string().required('Email is required').matches(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,'Invalid email address'),
@@ -48,6 +62,15 @@ function Login() {
     setPasswordError(error);
   }
 
+  const HandleRememberMeChange = (e: SyntheticEvent) => {
+    const target = e.target as HTMLInputElement;
+    setRememberMe(target.checked)
+
+    if (!target.checked) {
+      window.localStorage.removeItem("ttp_remember_me");
+    }
+  }
+
   const HandleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const isValid = await validateForm();
@@ -56,7 +79,29 @@ function Login() {
       return;
     }
 
-    setLoading(true);
+    dispatch(login({
+      email,
+      password,
+    }))
+      .unwrap()
+      .then(res => {
+        const user = {
+          email,
+          password,
+        }
+
+        // TODO: Encrypt password
+        window.localStorage.setItem("ttp_remember_me", JSON.stringify(user));
+        dispatch(setUser(res));
+        goTo("home");
+      })
+      .catch(error => {
+        console.log("ERROR: ", error);
+        //dispatch(showSnackbar(error.msg));
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }
 
   return (
@@ -96,6 +141,9 @@ function Login() {
             helperText={passwordError}
             onChange={HandlePasswordChange}
           />
+        </Grid>
+        <Grid className="input-row" container item flexDirection={"row"} alignItems="center">
+          <FormControlLabel control={<Checkbox checked={rememberMe} color="secondary" disabled={loading} onChange={HandleRememberMeChange} />} label="Remember me" sx={{ margin: "0" }} />
         </Grid>
         <Grid className="action-row" container item flexDirection={"row"} alignItems="center" justifyContent='center'>
           <Button color='primary' variant='contained' disabled={loading} type="submit">
